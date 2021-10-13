@@ -1,0 +1,128 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: cert-manager
+  namespace: flux-system
+spec:
+  interval: 5m
+  path: "./cert-manager/controller"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: cert-manager
+      namespace: cert-manager
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: certs
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: cert-manager
+  interval: 5m
+  path: "./cert-manager/certs"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+# kind: Kustomization
+# metadata:
+#   name: cert-manager
+#   namespace: flux-system
+# spec:
+#   interval: 3m0s
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-sytem
+#   path: ./cert-manager
+#   prune: true
+#   healthChecks:
+#     - apiVersion: apps/v1
+#       kind: Deployment
+#       name: cert-manager
+#       namespace: cert-manager
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+# kind: Kustomization
+# metadata:
+#   name: certs
+#   namespace: flux-system
+# spec:
+#   suspend: true
+#   dependsOn:
+#     - name: cert-manager
+#   interval: 3m
+#   path: "./certificate"
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+# kind: Kustomization
+# metadata:
+#   name: cert-manager
+#   namespace: flux-system
+# spec:
+#   interval: 1m0s
+#   dependsOn:
+#     - name: ingress-nginx
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-sytem
+#   path: ./cert-manager
+#   prune: true
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+# kind: Kustomization
+# metadata:
+#   name: ingress-nginx
+#   namespace: flux-system
+# spec:
+#   interval: 1m0s
+#   # dependsOn:
+#   #   - name: cert-manager
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./ingress-nginx
+#   prune: true
+
+# # ---
+# # apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+# # kind: Kustomization
+# # metadata:
+# #   name: cluster-issuer
+# #   namespace: flux-system
+# # spec:
+# #   interval: 1m0s
+# #   dependsOn:
+# #     - name: ingress-nginx
+# #   sourceRef:
+# #     kind: GitRepository
+# #     name: flux-system
+# #   path: ./cluster-issuer
+# #   prune: true
+
+# # ---
+# # apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+# # kind: Kustomization
+# # metadata:
+# #   name: flux-test
+# #   namespace: flux-system
+# # spec:
+# #   interval: 1m0s
+# #   dependsOn:
+# #     - name: cert-manager
+# #   sourceRef:
+# #     kind: GitRepository
+# #     name: flux-system
+# #   path: ./certificate
+# #   prune: true

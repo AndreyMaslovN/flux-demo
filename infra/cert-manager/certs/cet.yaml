@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: flux-test
+  namespace: default
+spec:
+  secretName: cert-mos
+  issuerRef:
+    name: cluster-issuer
+  commonName: flux-test.mos.corp
+  dnsNames:
+  - flux-test.mos.corp
